@@ -1,5 +1,25 @@
 <script setup>
- 
+
+import {useAuth} from "@/stores";
+import { storeToRefs } from "pinia";
+import { useRouter } from 'vue-router';
+import { ElNotification } from 'element-plus'
+const auth = useAuth()
+const {user, loading} = storeToRefs(auth)
+
+const router = useRouter()
+const userLogout = async () => {
+  const res = await auth.logout();
+
+  if(res.status){
+    router.push({name:"home"})
+    ElNotification({
+      title: 'Success',
+      message: "Logged Out",
+      type: "success"
+    })
+  }
+} 
  function headerSearch(){
     $(".header-form").toggleClass("active"),
     $('.header-src').children(".fa-search").toggleClass("fa-times");
@@ -27,6 +47,7 @@
           $(".backdrop").fadeOut();
       });
  }
+
 
 </script>
  
@@ -76,7 +97,7 @@
             <div class="header-widget-group hover-nav">
               <li class="nav-item dropdown">
                 <a class="nav-link header-widget" href="#"><i class="fas fa-user"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end">
+                <ul class="dropdown-menu dropdown-menu-end" v-if="!user.meta">
                   <li>
                     <router-link class="dropdown-item" :to="{name: 'user.login'}">
                       Login
@@ -87,6 +108,9 @@
                       Register
                     </router-link>
                   </li>
+                </ul>
+
+                <ul class="dropdown-menu dropdown-menu-end" v-else>
                   <li>
                     <router-link class="dropdown-item" :to="{name: 'user.profile'}">
                       My Profile
@@ -102,7 +126,12 @@
                       Wishlist
                     </router-link>
                   </li>
-                  
+                  <li>
+                    <button class="dropdown-item" @click.prevent="userLogout" :disabled="loading">
+                      Logout
+                      <span v-show="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                    </button>
+                  </li>
                 </ul>
               </li>
 
