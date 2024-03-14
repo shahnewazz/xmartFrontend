@@ -3,6 +3,7 @@ import {Index, Shop, SellerPage, SellerStore, SellerApply, ProductDetails, Check
 import {Login, Register} from '@/views/auth';
 import {MyProfile, MyOrderList, MyWishList} from '@/views/user';
 import { useAuth } from "@/stores";
+import NProgress from "nprogress";
 
 const routes = [
     {
@@ -96,7 +97,7 @@ const DEFAULT_TITLE = "404 Not Found"
 
 router.beforeEach((to, from, next) => {
     document.title = to.meta.title || DEFAULT_TITLE;
-
+    NProgress.start()
     const loggedIn = useAuth();
 
     if(to.matched.some((reocrd) => reocrd.meta.requiresAuth)){
@@ -116,8 +117,10 @@ router.beforeEach((to, from, next) => {
     else{
         next();
     }
+});
 
-
+router.afterEach(()=>{
+    NProgress.done()
 })
 
 export default router;

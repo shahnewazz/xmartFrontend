@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref } from 'vue';
-import { useAuth } from '@/stores/auth';
+import { useAuth, useNotification } from '@/stores';
 import {storeToRefs} from "pinia"
 import { useRouter } from 'vue-router';
 import { ElNotification } from 'element-plus'
@@ -13,7 +13,7 @@ const schema = yup.object({
 });
 
 const router = useRouter()
-
+const notify = useNotification();
 const auth = useAuth();
 const {user} = storeToRefs(auth);
 
@@ -25,11 +25,7 @@ const form = reactive({
 const onSubmit = async(values, {setErrors}) => {
   let response = await auth.login(form)
   if(response.data){
-    ElNotification({
-      title: 'Success',
-      message: "Redirecting to Home Page",
-      type: "success"
-    })
+    notify.Success('Logged Successfull')
     router.push({name: 'user.profile'})
   }else{
     setErrors(response)

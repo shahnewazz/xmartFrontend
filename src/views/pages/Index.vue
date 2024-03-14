@@ -1,7 +1,8 @@
 <script setup>
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-
+import { storeToRefs } from 'pinia';
+import { useSlider } from '@/stores';
 import 'swiper/css';
 import {Pagination, Autoplay, Navigation} from 'swiper/modules';
 
@@ -9,8 +10,19 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 
+
 const modules = ref([Pagination, Autoplay])
 const newSlide = ref([Navigation, Autoplay])
+
+const slider = useSlider();
+const {sliders} = storeToRefs(slider);
+
+
+onMounted(()=>{
+  slider.getSliders()
+})
+
+
 
 </script>
  
@@ -30,19 +42,10 @@ const newSlide = ref([Navigation, Autoplay])
                                     disableOnInteraction: false,
                                 }"
                                 class="mySwiper">
-                                <swiper-slide>
+
+                                <swiper-slide v-for="(slider,index) in sliders.data" :key="index">
                                   <a href="#" class="w-100 d-block">
-                                        <img src="@/assets/images/banner/01.jfif" alt="" />
-                                      </a>
-                                </swiper-slide>
-                                <swiper-slide>
-                                  <a href="#" class="w-100 d-block">
-                                        <img src="@/assets/images/banner/02.jfif" alt="" />
-                                      </a>
-                                </swiper-slide>
-                                <swiper-slide>
-                                  <a href="#" class="w-100 d-block">
-                                        <img src="@/assets/images/banner/03.jfif" alt="" />
+                                        <img :src="slider.image" alt="" />
                                       </a>
                                 </swiper-slide>
                                
