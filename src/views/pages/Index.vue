@@ -2,7 +2,8 @@
 import {onMounted, ref} from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { storeToRefs } from 'pinia';
-import { useSlider } from '@/stores';
+import {ProductCard} from '@/components/product'
+import { useSlider, useCategory, useProduct } from '@/stores';
 import 'swiper/css';
 import {Pagination, Autoplay, Navigation} from 'swiper/modules';
 
@@ -17,9 +18,17 @@ const newSlide = ref([Navigation, Autoplay])
 const slider = useSlider();
 const {sliders} = storeToRefs(slider);
 
+const category = useCategory();
+const {categories} = storeToRefs(category);
+
+const product = useProduct();
+const {products} = storeToRefs(product);
+
 
 onMounted(()=>{
   slider.getSliders()
+  category.getCategories()
+  product.getProducts()
 })
 
 
@@ -28,6 +37,7 @@ onMounted(()=>{
  
 <template>
     <div>
+      
         <section class="banner-part">
             <div class="">
                 <div class="row">
@@ -67,143 +77,17 @@ onMounted(()=>{
       </div>
 
       <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
-        <div class="col">
+        <div class="col" v-for="(category, index) in categories.data" :key="index">
           <div class="product-card">
             <ul>
               <li>
-                <a class="suggest-card" href="shop-4column.html">
-                  <img src="@/assets/images/promo/home/07.jpg" alt="" />
+                <a class="suggest-card" :href="category.slug">
+                  <img :src="category.image" alt="" />
                 </a>
               </li>
             </ul>
 
-            <h6 class="text-center mt-2">category name</h6>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <ul>
-              <li>
-                <a class="suggest-card" href="shop-4column.html">
-                  <img src="@/assets/images/promo/home/07.jpg" alt="" />
-                </a>
-              </li>
-            </ul>
-
-            <h6 class="text-center mt-2">category name</h6>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <ul>
-              <li>
-                <a class="suggest-card" href="shop-4column.html">
-                  <img src="@/assets/images/promo/home/07.jpg" alt="" />
-                </a>
-              </li>
-            </ul>
-
-            <h6 class="text-center mt-2">category name</h6>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <ul>
-              <li>
-                <a class="suggest-card" href="shop-4column.html">
-                  <img src="@/assets/images/promo/home/07.jpg" alt="" />
-                </a>
-              </li>
-            </ul>
-
-            <h6 class="text-center mt-2">category name</h6>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <ul>
-              <li>
-                <a class="suggest-card" href="shop-4column.html">
-                  <img src="@/assets/images/promo/home/07.jpg" alt="" />
-                </a>
-              </li>
-            </ul>
-
-            <h6 class="text-center mt-2">category name</h6>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <ul>
-              <li>
-                <a class="suggest-card" href="shop-4column.html">
-                  <img src="@/assets/images/promo/home/07.jpg" alt="" />
-                </a>
-              </li>
-            </ul>
-
-            <h6 class="text-center mt-2">category name</h6>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <ul>
-              <li>
-                <a class="suggest-card" href="shop-4column.html">
-                  <img src="@/assets/images/promo/home/07.jpg" alt="" />
-                </a>
-              </li>
-            </ul>
-
-            <h6 class="text-center mt-2">category name</h6>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <ul>
-              <li>
-                <a class="suggest-card" href="shop-4column.html">
-                  <img src="@/assets/images/promo/home/07.jpg" alt="" />
-                </a>
-              </li>
-            </ul>
-
-            <h6 class="text-center mt-2">category name</h6>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <ul>
-              <li>
-                <a class="suggest-card" href="shop-4column.html">
-                  <img src="@/assets/images/promo/home/06.jpg" alt="" />
-                </a>
-              </li>
-            </ul>
-
-            <h6 class="text-center mt-2">category name</h6>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <ul>
-              <li>
-                <a class="suggest-card" href="shop-4column.html">
-                  <img src="@/assets/images/promo/home/07.jpg" alt="" />
-                </a>
-              </li>
-            </ul>
-
-            <h6 class="text-center mt-2">category name</h6>
+            <h6 class="text-center mt-2">{{category.name}}</h6>
           </div>
         </div>
       </div>
@@ -220,246 +104,10 @@ onMounted(()=>{
         </div>
       </div>
       <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
-        <div class="col">
-          <div class="product-card">
-            <div class="product-media">
-              <div class="product-label">
-                <label class="label-text sale">sale</label>
-              </div>
-              <button class="product-wish wish">
-                <i class="fas fa-heart"></i></button><router-link class="product-image" :to="{name: 'product.details'}"><img
-                  src="@/assets/images/product/01.jpg" alt="product" /></router-link>
-            </div>
-            <div class="product-content">
-              <h6 class="product-name">
-                <router-link :to="{name: 'product.details'}">Products Name</router-link>
-              </h6>
-              <h6 class="product-price">
-                <del>$34</del><span>$28<small></small></span>
-              </h6>
-              <button class="product-add" title="Add to Cart">
-                <i class="fas fa-shopping-basket"></i><span>Add</span>
-              </button>
-            </div>
-          </div>
-        </div>
+        
+        
+        <ProductCard :products="products"/>
 
-        <div class="col">
-          <div class="product-card">
-            <div class="product-media">
-              <div class="product-label">
-                <label class="label-text rate">Popular</label>
-                <label class="view-label off">-2%</label>
-              </div>
-              <button class="product-wish wish">
-                <i class="fas fa-heart"></i></button><a class="product-image" href="product-video.html"><img
-                  src="@/assets/images/product/03.jpg" alt="product" /></a>
-            </div>
-            <div class="product-content">
-              <h6 class="product-name">
-                <a href="product-video.html">Products Name</a>
-              </h6>
-              <h6 class="product-price">
-                <del>$34</del><span>$28<small></small></span>
-              </h6>
-              <button class="product-add" title="Add to Cart">
-                <i class="fas fa-shopping-basket"></i><span>Add</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <div class="product-media">
-              <div class="product-label">
-                <label class="label-text sale">sale</label>
-              </div>
-              <button class="product-wish wish">
-                <i class="fas fa-heart"></i></button><a class="product-image" href="product-video.html"><img
-                  src="@/assets/images/product/02.jpg" alt="product" /></a>
-            </div>
-            <div class="product-content">
-              <h6 class="product-name">
-                <a href="product-video.html">Products Name</a>
-              </h6>
-              <h6 class="product-price">
-                <del>$34</del><span>$28<small></small></span>
-              </h6>
-              <button class="product-add" title="Add to Cart">
-                <i class="fas fa-shopping-basket"></i><span>Add</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <div class="product-media">
-              <div class="product-label">
-                <label class="label-text sale">sale</label>
-              </div>
-              <button class="product-wish wish">
-                <i class="fas fa-heart"></i></button><a class="product-image" href="product-video.html"><img
-                  src="@/assets/images/product/04.jpg" alt="product" /></a>
-            </div>
-            <div class="product-content">
-              <h6 class="product-name">
-                <a href="product-video.html">Products Name</a>
-              </h6>
-              <h6 class="product-price">
-                <del>$34</del><span>$28<small></small></span>
-              </h6>
-              <button class="product-add" title="Add to Cart">
-                <i class="fas fa-shopping-basket"></i><span>Add</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <div class="product-media">
-              <div class="product-label">
-                <label class="label-text sale">sale</label>
-              </div>
-              <button class="product-wish wish">
-                <i class="fas fa-heart"></i></button><a class="product-image" href="product-video.html"><img
-                  src="@/assets/images/product/05.jpg" alt="product" /></a>
-            </div>
-            <div class="product-content">
-              <h6 class="product-name">
-                <a href="product-video.html">Products Name</a>
-              </h6>
-              <h6 class="product-price">
-                <del>$34</del><span>$28<small></small></span>
-              </h6>
-              <button class="product-add" title="Add to Cart">
-                <i class="fas fa-shopping-basket"></i><span>Add</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <div class="product-media">
-              <div class="product-label">
-                <label class="label-text sale">sale</label>
-              </div>
-              <button class="product-wish wish">
-                <i class="fas fa-heart"></i></button><a class="product-image" href="product-video.html"><img
-                  src="@/assets/images/product/11.jpg" alt="product" /></a>
-            </div>
-            <div class="product-content">
-              <h6 class="product-name">
-                <a href="product-video.html">Products Name</a>
-              </h6>
-              <h6 class="product-price">
-                <del>$34</del><span>$28<small></small></span>
-              </h6>
-              <button class="product-add" title="Add to Cart">
-                <i class="fas fa-shopping-basket"></i><span>Add</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <div class="product-media">
-              <div class="product-label">
-                <label class="label-text sale">sale</label>
-              </div>
-              <button class="product-wish wish">
-                <i class="fas fa-heart"></i></button><a class="product-image" href="product-video.html"><img
-                  src="@/assets/images/product/02.jpg" alt="product" /></a>
-            </div>
-            <div class="product-content">
-              <h6 class="product-name">
-                <a href="product-video.html">Products Name</a>
-              </h6>
-              <h6 class="product-price">
-                <del>$34</del><span>$28<small></small></span>
-              </h6>
-              <button class="product-add" title="Add to Cart">
-                <i class="fas fa-shopping-basket"></i><span>Add</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <div class="product-media">
-              <div class="product-label">
-                <label class="label-text sale">sale</label>
-              </div>
-              <button class="product-wish wish">
-                <i class="fas fa-heart"></i></button><a class="product-image" href="product-video.html"><img
-                  src="@/assets/images/product/06.jpg" alt="product" /></a>
-            </div>
-            <div class="product-content">
-              <h6 class="product-name">
-                <a href="product-video.html">Products Name</a>
-              </h6>
-              <h6 class="product-price">
-                <del>$34</del><span>$28<small></small></span>
-              </h6>
-              <button class="product-add" title="Add to Cart">
-                <i class="fas fa-shopping-basket"></i><span>Add</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <div class="product-media">
-              <div class="product-label">
-                <label class="label-text sale">sale</label>
-              </div>
-              <button class="product-wish wish">
-                <i class="fas fa-heart"></i></button><a class="product-image" href="product-video.html"><img
-                  src="@/assets/images/product/08.jpg" alt="product" /></a>
-            </div>
-            <div class="product-content">
-              <h6 class="product-name">
-                <a href="product-video.html">Products Name</a>
-              </h6>
-              <h6 class="product-price">
-                <del>$34</del><span>$28<small></small></span>
-              </h6>
-              <button class="product-add" title="Add to Cart">
-                <i class="fas fa-shopping-basket"></i><span>Add</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="product-card">
-            <div class="product-media">
-              <div class="product-label">
-                <label class="label-text sale">sale</label>
-              </div>
-              <button class="product-wish wish">
-                <i class="fas fa-heart"></i></button><a class="product-image" href="product-video.html"><img
-                  src="@/assets/images/product/09.jpg" alt="product" /></a>
-            </div>
-            <div class="product-content">
-              <h6 class="product-name">
-                <a href="product-video.html">Products Name</a>
-              </h6>
-              <h6 class="product-price">
-                <del>$34</del><span>$28<small></small></span>
-              </h6>
-              <button class="product-add" title="Add to Cart">
-                <i class="fas fa-shopping-basket"></i><span>Add</span>
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
       <div class="row">
         <div class="col-lg-12">
