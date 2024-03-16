@@ -3,9 +3,10 @@ import './style.css';
 import './template.js';
 import 'nprogress/nprogress.css';
 import {createPinia} from 'pinia';
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+import ElementPlus from 'element-plus';
+import 'element-plus/dist/index.css';
+import "skeleton-screen-css";
 import router from './router';
 import App from './App.vue';
 
@@ -20,5 +21,8 @@ app.mount('#app')
 app.config.globalProperties.$filters = {
     currencySymbol(value){
         return "$" + value.toLocaleString()
+    },
+    makeImagePath(img){
+        return import.meta.env.VITE_API_URL + "/" + img
     }
 }

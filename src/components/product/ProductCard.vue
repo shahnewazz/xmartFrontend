@@ -1,16 +1,40 @@
 <script setup>
-    import { ProductPrice } from "@/components/product";
-    const props = defineProps({
-        products: {
-            type: Object,
-            required : true
-        }
+import {useCart} from '@/stores'
+import { ProductPrice } from "@/components/product";
+import { ref } from 'vue';
+const props = defineProps({
+    products: {
+        type: Object,
+        required : true
+    }
+})
+
+const cart = useCart();
+const price = ref()
+
+function addToCart(product){
+    if(product.discount){
+        let firstprice = product.price;
+        let discount = product.discount / 100
+        let totalPrice = firstprice - (firstprice * discount);
+
+        price.value = totalPrice.toFixed(2)
+    }else{
+        price.value = product.price
+    }
+
+    cart.addToCart({
+        id: product.id,
+        name: product.name,
+        price: price.value,
+        thumbnail: product.thumbnail,
     })
+}
+
 </script>
 
 <template>
     <div class="col" v-for="(product, index) in products.data" :key="index">
-        
         <div class="product-card">
             <div class="product-media">
                 <div class="product-label">
@@ -21,7 +45,7 @@
                 <i class="fas fa-heart"></i>
                 </button>
                 <router-link class="product-image" :to="{name: 'product.details'}">
-                <img :src="product.thumbnail" alt="product" />
+                <img :src="$filters.makeImagePath(product.thumbnail)" alt="product" />
                 </router-link>
             </div>
             <div class="product-content">
@@ -31,7 +55,7 @@
 
                 <ProductPrice :price="product.price" :discount="product.discount"/>
 
-                <button class="product-add" title="Add to Cart">
+                <button class="product-add" title="Add to Cart" @click.prevent="addToCart(product)">
                     <i class="fas fa-shopping-basket"></i><span>Add</span>
                 </button>
             </div>

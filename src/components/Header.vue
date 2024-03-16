@@ -1,9 +1,14 @@
 <script setup>
 
-import {useAuth} from "@/stores";
+import {useAuth, useCart} from "@/stores";
 import { storeToRefs } from "pinia";
 import { useRouter } from 'vue-router';
 import { ElNotification } from 'element-plus'
+
+
+const cart = useCart();
+const {cartItemsCount } = storeToRefs(cart)
+
 const auth = useAuth()
 const {user, loading} = storeToRefs(auth)
 
@@ -141,7 +146,7 @@ const userLogout = async () => {
               </a>
               <button class="header-widget header-cart" title="Cartlist" @click="cartOpen">
                 <i class="fas fa-shopping-basket"></i>
-                <sup>9+</sup>
+                <sup>{{cartItemsCount}}</sup>
                 <span>total price<small>$345.00</small></span>
               </button>
             </div>
