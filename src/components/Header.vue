@@ -23,11 +23,13 @@ const userLogout = async () => {
       message: "Logged Out",
       type: "success"
     })
+
   }
 } 
  function headerSearch(){
     $(".header-form").toggleClass("active"),
     $('.header-src').children(".fa-search").toggleClass("fa-times");
+
  }
 
  function menu(){
