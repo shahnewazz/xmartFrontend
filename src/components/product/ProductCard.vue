@@ -1,5 +1,5 @@
 <script setup>
-import {useCart} from '@/stores'
+import {useCart, useNotification} from '@/stores'
 import { ProductPrice } from "@/components/product";
 import { ref } from 'vue';
 const props = defineProps({
@@ -10,6 +10,7 @@ const props = defineProps({
 })
 
 const cart = useCart();
+const notify = useNotification();
 const price = ref()
 
 function addToCart(product){
@@ -29,6 +30,8 @@ function addToCart(product){
         price: price.value,
         thumbnail: product.thumbnail,
     })
+
+    notify.Success(`${product.name} added to cart`)
 }
 
 </script>

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { reactive, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 import axiosInstance from "@/services/axiosService";
 
 
@@ -24,16 +24,56 @@ export const useCart = defineStore("cart", () => {
             cartItems.push(item)
         }
         }else{
-           
             cartItems.push(item)
-
         }
 
         cartItemsCount.value += 1;
-
-        console.log(cartItems)
       
     }
 
-    return { addToCart, loading, cartItems, cartItemsCount}
-})
+    const totalPrice = computed(() => {
+        let total = 0;
+        cartItems.map((item) => {
+            total += item.price * item.quantity
+        })
+ 
+        return total;
+       
+    })
+
+    const cartTotalItems = computed(() => {
+        let total = 0;
+        cartItems.map((item) => {
+            total += item.quantity
+        })
+ 
+        return total;
+       
+    })
+
+    async function deleteCartItem(index){
+        cartItems.splice(index, 1);
+        cartItemsCount.value -= 1;
+    }
+
+    async function decrementCartItem(index){
+        if(cartItems[index]['quantity'] !== 1){
+            cartItems[index]['quantity'] -= 1;
+            cartItemsCount.value -= 1;
+        }
+
+    }
+
+    async function incrementCartItem(index){
+        cartItems[index]['quantity'] += 1;
+        cartItemsCount.value += 1;
+    }
+
+    return { addToCart, loading, cartItems, cartItemsCount, totalPrice, cartTotalItems, deleteCartItem, decrementCartItem, incrementCartItem}
+},
+{
+    persist: {
+        paths: ["cartItems", "cartItemsCount"]
+    },
+},
+)

@@ -16,7 +16,6 @@ pinia.use(piniaPluginPersistedstate)
 app.use(pinia)
 app.use(ElementPlus)
 app.use(router)
-app.mount('#app')
 
 app.config.globalProperties.$filters = {
     currencySymbol(value){
@@ -26,3 +25,5 @@ app.config.globalProperties.$filters = {
         return import.meta.env.VITE_API_URL + "/" + img
     }
 }
+
+app.mount('#app')
