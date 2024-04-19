@@ -18,9 +18,11 @@ export const useCart = defineStore("cart", () => {
            let hasItem =  cartItems.some((i) => i.id === item.id);
 
            if(hasItem){
+            console.log('has item')
             let index = cartItems.findIndex((i) => i.id === item.id);
                 cartItems[index]['quantity'] += 1;
            }else{
+            console.log('new item pushed')
             cartItems.push(item)
         }
         }else{
